@@ -1,0 +1,10 @@
+package com.gabriel.photoappusers.service;
+
+import com.gabriel.photoappusers.shared.UserDto;
+import org.springframework.security.core.userdetails.UserDetailsService;
+
+public interface UserService extends UserDetailsService {
+
+    UserDto createUser(UserDto userDto);
+    UserDto getUserByEmail(String email);
+}
