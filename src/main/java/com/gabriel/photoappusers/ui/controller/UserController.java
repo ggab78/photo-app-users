@@ -29,12 +29,13 @@ public class UserController {
 
     @GetMapping("/status/check")
     public String status() {
-        return "Working on port " + env.getProperty("local.server.port");
+        return "Working on port " + env.getProperty("local.server.port")
+                + " with token " + env.getProperty("token.secret");
     }
 
 
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
-    produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+            produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<CreateUserResponseModel> createUser(@Valid @RequestBody CreateUserRequestModel userRequest) {
 
         ModelMapper mapper = new ModelMapper();
@@ -44,7 +45,7 @@ public class UserController {
 
         userDto = userService.createUser(userDto);
 
-        return new ResponseEntity(mapper.map(userDto,CreateUserResponseModel.class),HttpStatus.CREATED);
+        return new ResponseEntity(mapper.map(userDto, CreateUserResponseModel.class), HttpStatus.CREATED);
     }
 
 }
