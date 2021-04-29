@@ -1,7 +1,6 @@
 package com.gabriel.photoappusers.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
 import com.gabriel.photoappusers.service.UserService;
 import com.gabriel.photoappusers.shared.UserDto;
 import com.gabriel.photoappusers.ui.model.LoginUserModel;
