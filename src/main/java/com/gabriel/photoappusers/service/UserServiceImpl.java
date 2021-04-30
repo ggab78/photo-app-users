@@ -3,16 +3,23 @@ package com.gabriel.photoappusers.service;
 import com.gabriel.photoappusers.data.UserEntity;
 import com.gabriel.photoappusers.repository.UserRepository;
 import com.gabriel.photoappusers.shared.UserDto;
+import com.gabriel.photoappusers.ui.model.AlbumResponseModel;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.core.env.Environment;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -22,6 +29,8 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final RestTemplate restTemplate;
+    private final Environment env;
 
     @Override
     public UserDto createUser(UserDto userDto) {
@@ -43,6 +52,23 @@ public class UserServiceImpl implements UserService {
         return new ModelMapper().map(userEntity, UserDto.class);
     }
 
+    @Override
+    public UserDto getUserByUserId(String userId) {
+        return new ModelMapper().map(userRepository.findByUserId(userId),UserDto.class);
+    }
+
+    @Override
+    public ResponseEntity<List<AlbumResponseModel>> getUserAlbums(String userId) {
+
+        String albumsUrl = String.format(env.getProperty("albums.url"),userId);
+
+        ResponseEntity<List<AlbumResponseModel>> exchange = restTemplate.exchange(albumsUrl, HttpMethod.GET, null,
+                new ParameterizedTypeReference<List<AlbumResponseModel>>() {
+                });
+
+        return exchange;
+
+    }
 
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
