@@ -10,6 +10,7 @@ import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -29,7 +30,8 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final RestTemplate restTemplate;
+    //private final RestTemplate restTemplate;
+    private final AlbumsServiceFeignClient albumsServiceFeignClient;
     private final Environment env;
 
     @Override
@@ -60,13 +62,17 @@ public class UserServiceImpl implements UserService {
     @Override
     public ResponseEntity<List<AlbumResponseModel>> getUserAlbums(String userId) {
 
-        String albumsUrl = String.format(env.getProperty("albums.url"),userId);
+//        String albumsUrl = String.format(env.getProperty("albums.url"),userId);
+//
+//        ResponseEntity<List<AlbumResponseModel>> exchange = restTemplate.exchange(albumsUrl, HttpMethod.GET, null,
+//                new ParameterizedTypeReference<List<AlbumResponseModel>>() {
+//                });
+//        return exchange;
 
-        ResponseEntity<List<AlbumResponseModel>> exchange = restTemplate.exchange(albumsUrl, HttpMethod.GET, null,
-                new ParameterizedTypeReference<List<AlbumResponseModel>>() {
-                });
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(albumsServiceFeignClient.getAlbums(userId));
 
-        return exchange;
     }
 
     @Override
