@@ -34,7 +34,7 @@ public class UserController {
                 + " with token " + env.getProperty("token.secret");
     }
 
-    @GetMapping(path = "/{userId}", produces = MediaType.APPLICATION_XML_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/{userId}/albums", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserResponseModel> getUser(@PathVariable("userId") String userId) {
 
         UserDto userDto = userService.getUserByUserId(userId);
