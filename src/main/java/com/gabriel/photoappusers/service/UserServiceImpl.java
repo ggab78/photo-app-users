@@ -4,6 +4,7 @@ import com.gabriel.photoappusers.data.UserEntity;
 import com.gabriel.photoappusers.repository.UserRepository;
 import com.gabriel.photoappusers.shared.UserDto;
 import com.gabriel.photoappusers.ui.model.AlbumResponseModel;
+import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
@@ -60,7 +61,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<List<AlbumResponseModel>> getUserAlbums(String userId) {
+    public ResponseEntity<List<AlbumResponseModel>> getUserAlbums(String userId) throws FeignException {
 
 //        String albumsUrl = String.format(env.getProperty("albums.url"),userId);
 //
@@ -69,10 +70,13 @@ public class UserServiceImpl implements UserService {
 //                });
 //        return exchange;
 
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(albumsServiceFeignClient.getAlbums(userId));
-
+        try {
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(albumsServiceFeignClient.getAlbums(userId));
+        }catch(FeignException e){
+            throw e;
+        }
     }
 
     @Override

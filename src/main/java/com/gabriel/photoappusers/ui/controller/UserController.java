@@ -5,7 +5,9 @@ import com.gabriel.photoappusers.shared.UserDto;
 import com.gabriel.photoappusers.ui.model.CreateUserRequestModel;
 import com.gabriel.photoappusers.ui.model.CreateUserResponseModel;
 import com.gabriel.photoappusers.ui.model.UserResponseModel;
+import feign.FeignException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+@Slf4j
 @RestController
 @RequestMapping("users")
 @RequiredArgsConstructor
@@ -40,7 +43,11 @@ public class UserController {
         UserDto userDto = userService.getUserByUserId(userId);
         UserResponseModel returnValue = new ModelMapper().map(userDto, UserResponseModel.class);
 
-        returnValue.setAlbums(userService.getUserAlbums(userId).getBody());
+//        try {
+            returnValue.setAlbums(userService.getUserAlbums(userId).getBody());
+//        }catch (FeignException e){
+//            log.error(e.getMessage());
+//        }
 
         return ResponseEntity.status(HttpStatus.OK).body(returnValue);
 
