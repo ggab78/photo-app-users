@@ -43,11 +43,15 @@ public class UserController {
         UserDto userDto = userService.getUserByUserId(userId);
         UserResponseModel returnValue = new ModelMapper().map(userDto, UserResponseModel.class);
 
+
+        log.info("before calling albums");
 //        try {
             returnValue.setAlbums(userService.getUserAlbums(userId).getBody());
 //        }catch (FeignException e){
 //            log.error(e.getMessage());
 //        }
+        log.info("after calling albums");
+
 
         return ResponseEntity.status(HttpStatus.OK).body(returnValue);
 
